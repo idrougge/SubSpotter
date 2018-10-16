@@ -22,4 +22,10 @@ extension CMTime {
         return CMTime(seconds: lhs.seconds + rhs,
                       preferredTimescale: lhs.timescale)
     }
+    
+    static func += (lhs: inout CMTime, rhs: TimeInterval) {
+        lhs = CMTime(seconds: lhs.seconds + rhs,
+                      preferredTimescale: lhs.timescale)
+    }
+    
 }
