@@ -17,8 +17,10 @@ class ViewController: NSViewController {
     @IBOutlet weak var playerView: PlayerView!
     @IBOutlet weak var tableView: NSTableView!
     
-    private var staged: Line? //(start: CMTime, text: String)?
+    private var staged: Line?
     private var lines: [Line] = []
+    
+    private let pasteType: NSPasteboard.PasteboardType = .init("line")
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,6 +32,7 @@ class ViewController: NSViewController {
         
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.registerForDraggedTypes([pasteType])
         playerView.playerLayer.player = AVPlayer()
     }
 
@@ -140,9 +143,24 @@ extension ViewController: NSTableViewDataSource, NSTableViewDelegate {
         default:      return nil
         }
         
-        let s = Int(time.seconds)
-        let ms = time.seconds.truncatingRemainder(dividingBy: 1)
+//        let s = Int(time.seconds)
+//        let ms = time.seconds.truncatingRemainder(dividingBy: 1)
         return String(format: "%06.3f", time.seconds)
+    }
+    
+    func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableView.DropOperation) -> NSDragOperation {
+        print(#function, info, row, dropOperation)
+        return [.every]
+    }
+    func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableView.DropOperation) -> Bool {
+        print(#function, info, row, dropOperation)
+        return true
+    }
+    func tableView(_ tableView: NSTableView, writeRowsWith rowIndexes: IndexSet, to pboard: NSPasteboard) -> Bool {
+        print(#function, rowIndexes)
+        // TODO: Implement copying and dragging
+        pboard.setData(nil, forType: self.pasteType)
+        return true
     }
 }
 
