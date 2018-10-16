@@ -17,7 +17,7 @@ class ViewController: NSViewController {
     @IBOutlet weak var playerView: PlayerView!
     @IBOutlet weak var tableView: NSTableView!
     
-    private var staged: (start: CMTime, text: String)?
+    private var staged: Line? //(start: CMTime, text: String)?
     private var lines: [Line] = []
     
     override func viewDidLoad() {
@@ -39,10 +39,14 @@ class ViewController: NSViewController {
         }
     }
     
+    let timer = Timer(timeInterval: 2, repeats: false){ timer in
+        print("fired", timer.timeInterval, timer.isValid)
+    }
+    
     override func keyUp(with event: NSEvent) {
         //print(#function, event)
         switch event.keyCode {
-        case 49: stage()
+        case 49: stage() // 49 = space
         default: return
         }
     }
@@ -51,8 +55,12 @@ class ViewController: NSViewController {
         guard let player = playerView.player
             else { return }
         commit()
-        let time = player.currentTime()
-        staged = (start: time, text: "En textrad")
+        
+        let startTime = player.currentTime()
+        let secondsToShow: TimeInterval = 3 // Should be calculated according to text length + K
+        let endTime = CMTime(seconds: startTime.seconds + secondsToShow,
+                             preferredTimescale: startTime.timescale)
+        staged = (start: startTime, end: endTime, text: "En textrad")
     }
 
     private func commit() {
@@ -99,9 +107,18 @@ class ViewController: NSViewController {
                 print("duration:", asset.overallDurationHint, asset.duration)
                 print("tracks:", asset.tracks, asset.trackGroups)
                 print("characteristics:", asset.availableMediaCharacteristicsWithMediaSelectionOptions)
+                guard let videoTrack = asset.tracks(withMediaType: AVMediaType.video).first else { return print("No video") }
+                let fps = videoTrack.nominalFrameRate
+                print("fps:", fps, "interval:", Double(1/fps))
                 let item = AVPlayerItem(asset: asset)
                 let player = self.playerView.player
                 player?.replaceCurrentItem(with: item)
+                player?.addPeriodicTimeObserver(forInterval: CMTime(seconds: TimeInterval(frames: fps), preferredTimescale: 600), queue: .main){ time in
+                    //print("periodic:", time.seconds, time.value, player!.currentTime().value)
+                    if let endTime = self.staged?.end, time >= endTime {
+                        self.commit()
+                    }
+                }
                 player?.play()
                 #if DEBUG
                 player?.isMuted = true
