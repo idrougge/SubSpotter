@@ -39,10 +39,6 @@ class ViewController: NSViewController {
         }
     }
     
-    let timer = Timer(timeInterval: 2, repeats: false){ timer in
-        print("fired", timer.timeInterval, timer.isValid)
-    }
-    
     override func keyUp(with event: NSEvent) {
         //print(#function, event)
         switch event.keyCode {
