@@ -14,3 +14,12 @@ extension TimeInterval {
         self.init(1/frames)
     }
 }
+
+import AVFoundation
+
+extension CMTime {
+    static func + (lhs: CMTime, rhs: TimeInterval) -> CMTime {
+        return CMTime(seconds: lhs.seconds + rhs,
+                      preferredTimescale: lhs.timescale)
+    }
+}

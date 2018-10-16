@@ -58,8 +58,7 @@ class ViewController: NSViewController {
         
         let startTime = player.currentTime()
         let secondsToShow: TimeInterval = 3 // Should be calculated according to text length + K
-        let endTime = CMTime(seconds: startTime.seconds + secondsToShow,
-                             preferredTimescale: startTime.timescale)
+        let endTime = startTime + secondsToShow
         staged = (start: startTime, end: endTime, text: "En textrad")
     }
 
