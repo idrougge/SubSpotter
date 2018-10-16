@@ -12,10 +12,13 @@ import AVKit
 
 class ViewController: NSViewController {
 
+    private typealias Line = (start: CMTime, end: CMTime, text: String)
+    
     @IBOutlet weak var playerView: PlayerView!
     @IBOutlet weak var tableView: NSTableView!
     
-    var lines: [(time: CMTime, text: String)] = []
+    private var staged: (start: CMTime, text: String)?
+    private var lines: [Line] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,12 +48,25 @@ class ViewController: NSViewController {
     }
     
     private func stage() {
-        guard let player = playerView.player else { return }
+        guard let player = playerView.player
+            else { return }
+        commit()
         let time = player.currentTime()
+        staged = (start: time, text: "En textrad")
+    }
+
+    private func commit() {
+        guard
+            let staged = staged,
+            let player = playerView.player
+            else { return }
+        let endTime = player.currentTime()
+        let line: Line = (start: staged.start, end: endTime, text: staged.text)
         let index = lines.endIndex
-        lines.append((time: time, text: "En textrad"))
+        lines.append(line)
         tableView.reloadData()
         tableView.scrollRowToVisible(index)
+        self.staged = nil
     }
     
     @IBAction func raise(_ sender: NSMenuItem) {
@@ -60,6 +76,7 @@ class ViewController: NSViewController {
     
     @IBAction func lower(_ sender: NSMenuItem) {
         print(#function)
+        commit()
     }
 
     @IBAction func didSelectOpen(_ sender: NSMenuItem) {
@@ -98,20 +115,22 @@ class ViewController: NSViewController {
 extension ViewController: NSTableViewDataSource, NSTableViewDelegate {
     
     func numberOfRows(in tableView: NSTableView) -> Int {
-        print(#function)
         return lines.count
     }
     func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
         //print(#function, row)
-        //return "\(tableColumn?.identifier.rawValue): \(row)"
+        let time: CMTime
+        
         switch tableColumn?.identifier.rawValue {
-        //case "time": return lines[row].time
-        case "time":
-            let time = lines[row].time
-            return time.value
-        case "text": return lines[row].text
-        default: return nil
+        case "start": time = lines[row].start
+        case "end":   time = lines[row].end
+        case "text":  return lines[row].text
+        default:      return nil
         }
+        
+        let s = Int(time.seconds)
+        let ms = time.seconds.truncatingRemainder(dividingBy: 1)
+        return String(format: "%06.3f", time.seconds)
     }
 }
 
