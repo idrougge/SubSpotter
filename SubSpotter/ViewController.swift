@@ -84,7 +84,7 @@ class ViewController: NSViewController {
         let dialogue = NSOpenPanel()
         dialogue.allowsMultipleSelection = false
         dialogue.canChooseDirectories = false
-        dialogue.allowedFileTypes = ["mp4", "m4v", "mpg", "avi", "mov", "mkv"]
+        dialogue.allowedFileTypes = ["mp4", "m4v", "mpg", "mpeg", "avi", "mov", "mkv"]
         guard dialogue.runModal() == .OK, let url = dialogue.url else { return }
         openNewFile(from: url)
     }
