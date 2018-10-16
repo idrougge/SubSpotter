@@ -15,7 +15,7 @@ class ViewController: NSViewController {
     @IBOutlet weak var playerView: PlayerView!
     @IBOutlet weak var tableView: NSTableView!
     
-    var lines: [(time: TimeInterval, text: String)] = []
+    var lines: [(time: CMTime, text: String)] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,15 +35,33 @@ class ViewController: NSViewController {
         // Update the view, if already loaded.
         }
     }
-
+    
+    override func keyUp(with event: NSEvent) {
+        //print(#function, event)
+        switch event.keyCode {
+        case 49: stage()
+        default: return
+        }
+    }
+    
+    private func stage() {
+        guard let player = playerView.player else { return }
+        let time = player.currentTime()
+        let index = lines.endIndex
+        lines.append((time: time, text: "En textrad"))
+        tableView.reloadData()
+        tableView.scrollRowToVisible(index)
+    }
+    
     @IBAction func raise(_ sender: NSMenuItem) {
         print(#function)
+        stage()
     }
     
     @IBAction func lower(_ sender: NSMenuItem) {
         print(#function)
     }
-    
+
     @IBAction func didSelectOpen(_ sender: NSMenuItem) {
         print(#function, sender)
         let dialogue = NSOpenPanel()
@@ -68,17 +86,16 @@ class ViewController: NSViewController {
                 let player = self.playerView.player
                 player?.replaceCurrentItem(with: item)
                 player?.play()
+                #if DEBUG
+                player?.isMuted = true
+                #endif
             }
             
         }
     }
 }
 
-extension ViewController: NSTableViewDataSource {
-    
-}
-
-extension ViewController: NSTableViewDelegate {
+extension ViewController: NSTableViewDataSource, NSTableViewDelegate {
     
     func numberOfRows(in tableView: NSTableView) -> Int {
         print(#function)
@@ -88,7 +105,10 @@ extension ViewController: NSTableViewDelegate {
         //print(#function, row)
         //return "\(tableColumn?.identifier.rawValue): \(row)"
         switch tableColumn?.identifier.rawValue {
-        case "time": return lines[row].time
+        //case "time": return lines[row].time
+        case "time":
+            let time = lines[row].time
+            return time.value
         case "text": return lines[row].text
         default: return nil
         }
