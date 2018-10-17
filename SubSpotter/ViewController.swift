@@ -31,6 +31,7 @@ class ViewController: NSViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.registerForDraggedTypes([LineWrapper.pasteboardType])
+        
         playerView.playerLayer.player = AVPlayer()
     }
 
@@ -56,7 +57,7 @@ class ViewController: NSViewController {
         let startTime = player.currentTime()
         let secondsToShow: TimeInterval = 3 // Should be calculated according to text length + K
         let endTime = startTime + secondsToShow
-        staged = Line(start: startTime, end: endTime, text: "En textrad")
+        staged = Line(start: startTime, end: endTime, text: "Textrad nr \(lines.endIndex)")
     }
 
     private func commit() {
@@ -125,6 +126,7 @@ class ViewController: NSViewController {
     }
 }
 
+// MARK: NSTableView
 extension ViewController: NSTableViewDataSource, NSTableViewDelegate {
     
     func numberOfRows(in tableView: NSTableView) -> Int {
@@ -141,22 +143,27 @@ extension ViewController: NSTableViewDataSource, NSTableViewDelegate {
         default:      return nil
         }
         
-        return String(format: "%06.3f", time.seconds)
+        return String(describing: time)
     }
     
     func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableView.DropOperation) -> NSDragOperation {
         //print(#function, info, row, dropOperation)
         return [.move]
     }
+    
     func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableView.DropOperation) -> Bool {
-        print(#function, info, row, dropOperation)
+        //print(#function, info, row, dropOperation)
         let pboard = info.draggingPasteboard()
         guard let data = pboard.data(forType: LineWrapper.pasteboardType) else { return false }
         do {
             let unarchived = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? LineWrapper
-            guard let line = unarchived?.line else { return false }
-            guard let oldIndex = lines.index(of: line) else { return false }
+            guard
+                let line = unarchived?.line,
+                let oldIndex = lines.index(of: line)
+                else { return false }
+            
             tableView.beginUpdates()
+            
             lines.insert(line, at: row)
             if oldIndex < row {
                 lines.remove(at: oldIndex)
@@ -164,6 +171,7 @@ extension ViewController: NSTableViewDataSource, NSTableViewDelegate {
                 lines.remove(at: oldIndex.advanced(by: 1))
             }
             tableView.moveRow(at: oldIndex, to: row)
+            
             tableView.endUpdates()
         } catch {
             print("deserialisation error:", error)
@@ -171,8 +179,9 @@ extension ViewController: NSTableViewDataSource, NSTableViewDelegate {
         }
         return true
     }
+    
     func tableView(_ tableView: NSTableView, writeRowsWith rowIndexes: IndexSet, to pboard: NSPasteboard) -> Bool {
-        print(#function, rowIndexes)
+        //print(#function, rowIndexes)
         guard let row = rowIndexes.first, lines.startIndex..<lines.endIndex ~= row else { return false }
         let linew = LineWrapper(lines[row])
         guard let data = linew.pasteboardPropertyList(forType: LineWrapper.pasteboardType) as? Data else {

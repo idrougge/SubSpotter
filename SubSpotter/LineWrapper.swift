@@ -34,6 +34,7 @@ class LineWrapper: NSObject {
     }
 }
 
+// MARK: NSCoding
 extension LineWrapper: NSCoding {
     func encode(with aCoder: NSCoder) {
         aCoder.encode(line.start, forKey: "start")
@@ -42,6 +43,7 @@ extension LineWrapper: NSCoding {
     }
 }
 
+// MARK: NSPasteboardWriting
 extension LineWrapper: NSPasteboardWriting {
     
     static let pasteboardType: NSPasteboard.PasteboardType = .init("line")
@@ -67,6 +69,7 @@ extension LineWrapper: NSPasteboardWriting {
     }
 }
 
+// MARK: NSPasteboardReading
 extension LineWrapper: NSPasteboardReading {
     static func readableTypes(for pasteboard: NSPasteboard) -> [NSPasteboard.PasteboardType] {
         return [LineWrapper.pasteboardType]
