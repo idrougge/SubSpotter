@@ -29,3 +29,7 @@ extension CMTime {
     }
     
 }
+
+extension CMTime: Hashable {
+    public var hashValue: Int { return self.value.hashValue }
+}
