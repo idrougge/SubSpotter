@@ -14,7 +14,7 @@ fileprivate let pasteType: NSPasteboard.PasteboardType = .init("line")
 
 class ViewController: NSViewController {
 
-    fileprivate typealias Line = (start: CMTime, end: CMTime, text: String)
+    //fileprivate typealias Line = (start: CMTime, end: CMTime, text: String)
     
     @IBOutlet weak var playerView: PlayerView!
     @IBOutlet weak var tableView: NSTableView!
@@ -59,7 +59,7 @@ class ViewController: NSViewController {
         let startTime = player.currentTime()
         let secondsToShow: TimeInterval = 3 // Should be calculated according to text length + K
         let endTime = startTime + secondsToShow
-        staged = (start: startTime, end: endTime, text: "En textrad")
+        staged = Line(start: startTime, end: endTime, text: "En textrad")
     }
 
     private func commit() {
@@ -68,7 +68,7 @@ class ViewController: NSViewController {
             let player = playerView.player
             else { return }
         let endTime = player.currentTime()
-        let line: Line = (start: staged.start, end: endTime, text: staged.text)
+        let line = Line(start: staged.start, end: endTime, text: staged.text)
         let index = lines.endIndex
         lines.append(line)
         tableView.reloadData()
@@ -197,7 +197,7 @@ extension ViewController: NSTableViewDataSource, NSTableViewDelegate {
             let s = aDecoder.decodeTime(forKey: "start")
             let e = aDecoder.decodeTime(forKey: "end")
             let t = aDecoder.decodeObject(forKey: "text") as? String ?? ""
-            self.line = (start: s, end: e, text: t)
+            self.line = Line(start: s, end: e, text: t)
         }
         
         fileprivate let line: Line
