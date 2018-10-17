@@ -8,9 +8,6 @@
 
 import Cocoa
 import AVFoundation
-import AVKit
-
-fileprivate let pasteType: NSPasteboard.PasteboardType = .init("line")
 
 class ViewController: NSViewController {
 
@@ -33,7 +30,7 @@ class ViewController: NSViewController {
         
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.registerForDraggedTypes([pasteType])
+        tableView.registerForDraggedTypes([LineWrapper.pasteboardType])
         playerView.playerLayer.player = AVPlayer()
     }
 
@@ -150,95 +147,41 @@ extension ViewController: NSTableViewDataSource, NSTableViewDelegate {
     }
     
     func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableView.DropOperation) -> NSDragOperation {
-        print(#function, info, row, dropOperation)
+        //print(#function, info, row, dropOperation)
         return [.move]
     }
     func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableView.DropOperation) -> Bool {
         print(#function, info, row, dropOperation)
         let pboard = info.draggingPasteboard()
-        guard let data = pboard.data(forType: pasteType) else { return false }
-        print("data:", data)
+        guard let data = pboard.data(forType: LineWrapper.pasteboardType) else { return false }
         do {
-            let plist = try PropertyListSerialization.propertyList(from: data, options: [], format: nil)
-            print("plist:", plist)
-            guard let dict = plist as? [String: Any] else { print("cast error") ; return false }
-            guard let root = dict["root"] as? Data else { print("Could not find root"); return false }
-            guard let grej = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(root) as? Grej else { print("Could not unarchive as correct type"); return false }
-            print(grej.line)
-            if lines.contains(where: {$0 == grej.line}) {
-                print("Lines contains line")
+            let unarchived = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? LineWrapper
+            guard let line = unarchived?.line else { return false }
+            guard let oldIndex = lines.index(of: line) else { return false }
+            tableView.beginUpdates()
+            lines.insert(line, at: row)
+            if oldIndex < row {
+                lines.remove(at: oldIndex)
+            } else {
+                lines.remove(at: oldIndex.advanced(by: 1))
             }
-            lines.insert(grej.line, at: row)
-            tableView.reloadData()
+            tableView.moveRow(at: oldIndex, to: row)
+            tableView.endUpdates()
         } catch {
             print("deserialisation error:", error)
             return false
         }
-        
         return true
     }
     func tableView(_ tableView: NSTableView, writeRowsWith rowIndexes: IndexSet, to pboard: NSPasteboard) -> Bool {
         print(#function, rowIndexes)
         guard let row = rowIndexes.first, lines.startIndex..<lines.endIndex ~= row else { return false }
-        let g = Grej.init(line: lines[row])
-        guard let data = g.pasteboardPropertyList(forType: pasteType) as? Data else { print("Couldn't serialise object"); return false }
-        pboard.setData(data, forType: pasteType)
+        let linew = LineWrapper(lines[row])
+        guard let data = linew.pasteboardPropertyList(forType: LineWrapper.pasteboardType) as? Data else {
+            print("Couldn't serialise object")
+            return false
+        }
+        pboard.setData(data, forType: LineWrapper.pasteboardType)
         return true
-    }
-    
-    @objc(_TtCC10SubSpotter14ViewController4Grej) class Grej: NSObject, NSPasteboardWriting, NSCoding {
-        func encode(with aCoder: NSCoder) {
-            aCoder.encode(line.start, forKey: "start")
-            aCoder.encode(line.end, forKey: "end")
-            aCoder.encode(line.text, forKey: "text")
-        }
-        
-        required init?(coder aDecoder: NSCoder) {
-            let s = aDecoder.decodeTime(forKey: "start")
-            let e = aDecoder.decodeTime(forKey: "end")
-            let t = aDecoder.decodeObject(forKey: "text") as? String ?? ""
-            self.line = Line(start: s, end: e, text: t)
-        }
-        
-        fileprivate let line: Line
-        fileprivate init(line: Line) {
-            self.line = line
-        }
-
-        func writableTypes(for pasteboard: NSPasteboard) -> [NSPasteboard.PasteboardType] {
-            return [pasteType]
-        }
-        
-        func pasteboardPropertyList(forType type: NSPasteboard.PasteboardType) -> Any? {
-            guard type == pasteType else { print("Incorrect paste type:", type); return nil }
-            //let values: [String:Any] = ["start": line.start, "end": line.end, "text": line.text]
-            let data = NSKeyedArchiver.archivedData(withRootObject: self)
-            let values: [String: Any] = ["root": data]
-            do {
-                let plist = try PropertyListSerialization.data(fromPropertyList: values, format: .binary, options: 0)
-                return plist
-            } catch {
-                print("Plist serialisation error:", error)
-                return nil
-            }
-        }
-    }
-
-}
-
-/// Use instead of standard AVPlayerView in order to avoid standard keyboard shortcuts and player controls
-class PlayerView: NSView {
-    // TODO: Implement scrubber and playback controls separately
-    required init?(coder decoder: NSCoder) {
-        super.init(coder: decoder)
-        self.layer = AVPlayerLayer()
-    }
-    
-    var playerLayer: AVPlayerLayer {
-        return self.layer as! AVPlayerLayer
-    }
-    
-    var player: AVPlayer? {
-        return playerLayer.player
     }
 }

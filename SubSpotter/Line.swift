@@ -14,6 +14,13 @@ struct Line: Equatable, Hashable {
     let text:  String
 }
 
+
+extension Line: CustomStringConvertible {
+    var description: String {
+        return String(format: "%@ — %@ : %@", start.description, end.description, text)
+    }
+}
+
 class LineWrapper: NSObject {
     let line: Line
     
@@ -27,13 +34,18 @@ class LineWrapper: NSObject {
         let t = aDecoder.decodeObject(forKey: "text") as? String ?? ""
         self.line = Line(start: s, end: e, text: t)
     }
-}
-
-extension Line: CustomStringConvertible {
-    var description: String {
-        return String(format: "%@ — %@ : %@", start.description, end.description, text)
+    
+    public required init?(pasteboardPropertyList propertyList: Any, ofType type: NSPasteboard.PasteboardType) {
+        guard
+            type == LineWrapper.pasteboardType,
+            let not_a_propertyList = propertyList as? LineWrapper else {
+                print("Not instance of self!")
+                return nil
+        }
+        self.line = not_a_propertyList.line
     }
 }
+
 
 extension LineWrapper: NSCoding {
     func encode(with aCoder: NSCoder) {
@@ -47,25 +59,35 @@ import Cocoa
 
 extension LineWrapper: NSPasteboardWriting {
     
-    static let pasteboardType: NSPasteboard.PasteboardType = .init("")
+    static let pasteboardType: NSPasteboard.PasteboardType = .init("line")
     
     func writableTypes(for pasteboard: NSPasteboard) -> [NSPasteboard.PasteboardType] {
-        return [LineWrapper.pasteboardType]
+        return [LineWrapper.pasteboardType, .string]
+    }
+    
+    func writingOptions(forType type: NSPasteboard.PasteboardType, pasteboard: NSPasteboard) -> NSPasteboard.WritingOptions {
+        return NSPasteboard.WritingOptions.promised
     }
     
     func pasteboardPropertyList(forType type: NSPasteboard.PasteboardType) -> Any? {
-        if type == .string {
-            // TODO: Implement and forward to CustomStringConvertible
-        }
-        guard type == LineWrapper.pasteboardType else { print("Incorrect paste type:", type); return nil }
-        let data = NSKeyedArchiver.archivedData(withRootObject: self)
-        let values: [String: Any] = ["root": data]
-        do {
-            let plist = try PropertyListSerialization.data(fromPropertyList: values, format: .binary, options: 0)
-            return plist
-        } catch {
-            print("Plist serialisation error:", error)
+        switch type {
+        case .string:
+            return NSString.pasteboardPropertyList(line.description as NSString)
+        case LineWrapper.pasteboardType:
+            return NSKeyedArchiver.archivedData(withRootObject: self)
+        default:
+            print("Incorrect paste type:", type)
             return nil
         }
+    }
+}
+
+extension LineWrapper: NSPasteboardReading {
+    static func readableTypes(for pasteboard: NSPasteboard) -> [NSPasteboard.PasteboardType] {
+        return [LineWrapper.pasteboardType]
+    }
+    
+    static func readingOptions(forType type: NSPasteboard.PasteboardType, pasteboard: NSPasteboard) -> NSPasteboard.ReadingOptions {
+        return [NSPasteboard.ReadingOptions.asKeyedArchive]
     }
 }
