@@ -15,6 +15,7 @@
 		DCA45C3D21760FA800C102CC /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA45C3C21760FA800C102CC /* Extensions.swift */; };
 		DCA45C3F217736C700C102CC /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA45C3E217736C700C102CC /* Line.swift */; };
 		DCA45C42217783C400C102CC /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA45C40217783C400C102CC /* PlayerView.swift */; };
+		DCA45C45217789A100C102CC /* LineWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA45C44217789A100C102CC /* LineWrapper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 		DCA45C3C21760FA800C102CC /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		DCA45C3E217736C700C102CC /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
 		DCA45C40217783C400C102CC /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
+		DCA45C44217789A100C102CC /* LineWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineWrapper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +72,7 @@
 				DC7E28052175E2EA0091006B /* WindowController.swift */,
 				DCA45C3C21760FA800C102CC /* Extensions.swift */,
 				DCA45C3E217736C700C102CC /* Line.swift */,
+				DCA45C44217789A100C102CC /* LineWrapper.swift */,
 				DCA45C40217783C400C102CC /* PlayerView.swift */,
 			);
 			path = SubSpotter;
@@ -149,6 +152,7 @@
 				DC7E28062175E2EA0091006B /* WindowController.swift in Sources */,
 				DC607DE52174BA7E009C56A9 /* AppDelegate.swift in Sources */,
 				DCA45C42217783C400C102CC /* PlayerView.swift in Sources */,
+				DCA45C45217789A100C102CC /* LineWrapper.swift in Sources */,
 				DCA45C3D21760FA800C102CC /* Extensions.swift in Sources */,
 				DCA45C3F217736C700C102CC /* Line.swift in Sources */,
 			);

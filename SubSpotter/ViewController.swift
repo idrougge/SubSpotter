@@ -141,8 +141,6 @@ extension ViewController: NSTableViewDataSource, NSTableViewDelegate {
         default:      return nil
         }
         
-//        let s = Int(time.seconds)
-//        let ms = time.seconds.truncatingRemainder(dividingBy: 1)
         return String(format: "%06.3f", time.seconds)
     }
     
