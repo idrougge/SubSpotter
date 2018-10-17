@@ -33,3 +33,9 @@ extension CMTime {
 extension CMTime: Hashable {
     public var hashValue: Int { return self.value.hashValue }
 }
+
+extension CMTime: CustomStringConvertible {
+    public var description: String {
+        return String(format: "%06.3f", seconds)
+    }
+}
