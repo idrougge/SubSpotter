@@ -17,6 +17,7 @@
 		DCA45C42217783C400C102CC /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA45C40217783C400C102CC /* PlayerView.swift */; };
 		DCA45C45217789A100C102CC /* LineWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA45C44217789A100C102CC /* LineWrapper.swift */; };
 		DCA45C472177914300C102CC /* Subtitles.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA45C462177914300C102CC /* Subtitles.swift */; };
+		DCA45C4B2178DA0A00C102CC /* Exporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA45C4A2178DA0A00C102CC /* Exporter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +34,7 @@
 		DCA45C40217783C400C102CC /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		DCA45C44217789A100C102CC /* LineWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineWrapper.swift; sourceTree = "<group>"; };
 		DCA45C462177914300C102CC /* Subtitles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Subtitles.swift; sourceTree = "<group>"; };
+		DCA45C4A2178DA0A00C102CC /* Exporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exporter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +79,7 @@
 				DCA45C44217789A100C102CC /* LineWrapper.swift */,
 				DCA45C40217783C400C102CC /* PlayerView.swift */,
 				DCA45C462177914300C102CC /* Subtitles.swift */,
+				DCA45C4A2178DA0A00C102CC /* Exporter.swift */,
 			);
 			path = SubSpotter;
 			sourceTree = "<group>";
@@ -152,6 +155,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DC607DE72174BA7E009C56A9 /* ViewController.swift in Sources */,
+				DCA45C4B2178DA0A00C102CC /* Exporter.swift in Sources */,
 				DCA45C472177914300C102CC /* Subtitles.swift in Sources */,
 				DC7E28062175E2EA0091006B /* WindowController.swift in Sources */,
 				DC607DE52174BA7E009C56A9 /* AppDelegate.swift in Sources */,

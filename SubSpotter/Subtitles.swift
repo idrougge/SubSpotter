@@ -48,6 +48,11 @@ class Subtitles: NSObject {
     var nextLine: String {
         return "Textrad nr \(lines.endIndex)"
     }
+    
+    func export(to destination: URL, using exporter: Exporter.Type) throws {
+        let exporter = exporter.init(list: lines)
+        try exporter.export(to: destination)
+    }
 }
 
 // MARK: - NSTableViewDataSource

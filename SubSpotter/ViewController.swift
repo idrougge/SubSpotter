@@ -18,6 +18,9 @@ class ViewController: NSViewController {
     
     var subtitles: Subtitles = Subtitles()
     
+    /// Full path to current file
+    var path: URL?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -88,12 +91,25 @@ class ViewController: NSViewController {
     
     @IBAction func didSelectSave(_ sender: NSMenuItem) {
         print(#function)
-        //
+        let suffix = "srt"
+        let dialogue = NSSavePanel()
+        dialogue.directoryURL = path?.deletingLastPathComponent()
+        if let filename = path?.deletingPathExtension().appendingPathExtension(suffix).lastPathComponent {
+            dialogue.nameFieldStringValue = filename
+        }
+        guard dialogue.runModal() == .OK, let url = dialogue.url else { return print("Save error") }
+        print("saving to:", url)
+        do {
+            try subtitles.export(to: url, using: SrtExporter.self)
+        } catch {
+            print("Save error:", error.localizedDescription)
+        }
     }
     
     func openNewFile(from url:URL) {
         print(#function, url)
         let asset = AVAsset(url: url)
+        path = url
         asset.loadValuesAsynchronously(forKeys: ["playable"]){
             DispatchQueue.main.async {
                 print("loaded values for", asset)
