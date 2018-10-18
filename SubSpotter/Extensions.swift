@@ -15,6 +15,20 @@ extension TimeInterval {
     }
 }
 
+extension Array {
+    mutating func moveElement(from source: Index, to destination: Index) {
+        let semaphore = DispatchSemaphore(value: 1)
+        semaphore.wait()
+        self.insert(self[source], at: destination)
+        if source < destination {
+            self.remove(at: source)
+        } else {
+            self.remove(at: source.advanced(by: 1))
+        }
+        semaphore.signal()
+    }
+}
+
 import AVFoundation
 
 extension CMTime {

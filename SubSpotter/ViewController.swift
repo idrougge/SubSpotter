@@ -16,9 +16,7 @@ class ViewController: NSViewController {
     @IBOutlet weak var playerView: PlayerView!
     @IBOutlet weak var tableView: NSTableView!
     
-    private var staged: Line?
-    private var lines: [Line] = []
-    
+    var subtitles: Subtitles = Subtitles()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,8 +26,8 @@ class ViewController: NSViewController {
             openNewFile(from: url)
         #endif
         
-        tableView.delegate = self
-        tableView.dataSource = self
+        //tableView.delegate = self
+        tableView.dataSource = subtitles
         tableView.registerForDraggedTypes([LineWrapper.pasteboardType])
         
         playerView.playerLayer.player = AVPlayer()
@@ -55,23 +53,17 @@ class ViewController: NSViewController {
         commit()
         
         let startTime = player.currentTime()
-        let secondsToShow: TimeInterval = 3 // Should be calculated according to text length + K
-        let endTime = startTime + secondsToShow
-        staged = Line(start: startTime, end: endTime, text: "Textrad nr \(lines.endIndex)")
+        subtitles.stage(text: subtitles.nextLine, at: startTime)
     }
 
     private func commit() {
-        guard
-            let staged = staged,
-            let player = playerView.player
+        guard let player = playerView.player
             else { return }
-        let endTime = player.currentTime()
-        let line = Line(start: staged.start, end: endTime, text: staged.text)
-        let index = lines.endIndex
-        lines.append(line)
+        
+        let index = subtitles.commit(at: player.currentTime())
+        
         tableView.reloadData()
         tableView.scrollRowToVisible(index)
-        self.staged = nil
     }
     
     @IBAction func raise(_ sender: NSMenuItem) {
@@ -80,7 +72,7 @@ class ViewController: NSViewController {
     }
     
     @IBAction func lower(_ sender: NSMenuItem) {
-        print(#function)
+        //print(#function)
         commit()
     }
 
@@ -92,6 +84,11 @@ class ViewController: NSViewController {
         dialogue.allowedFileTypes = ["mp4", "m4v", "mpg", "mpeg", "avi", "mov", "mkv"]
         guard dialogue.runModal() == .OK, let url = dialogue.url else { return }
         openNewFile(from: url)
+    }
+    
+    @IBAction func didSelectSave(_ sender: NSMenuItem) {
+        print(#function)
+        //
     }
     
     func openNewFile(from url:URL) {
@@ -110,10 +107,12 @@ class ViewController: NSViewController {
                 let item = AVPlayerItem(asset: asset)
                 let player = self.playerView.player
                 player?.replaceCurrentItem(with: item)
-                player?.addPeriodicTimeObserver(forInterval: CMTime(seconds: TimeInterval(frames: fps), preferredTimescale: 600), queue: .main){ time in
+                player?.addPeriodicTimeObserver(forInterval: CMTime(seconds: TimeInterval(frames: fps), preferredTimescale: 600), queue: .main){ [weak self] time in
                     //print("periodic:", time.seconds, time.value, player!.currentTime().value)
-                    if let endTime = self.staged?.end, time >= endTime {
-                        self.commit()
+                    self?.subtitles.currentTime = time
+                    self?.subtitles.commit{ index in
+                        self?.tableView.reloadData()
+                        self?.tableView.scrollRowToVisible(index)
                     }
                 }
                 player?.play()
@@ -123,72 +122,5 @@ class ViewController: NSViewController {
             }
             
         }
-    }
-}
-
-// MARK: NSTableView
-extension ViewController: NSTableViewDataSource, NSTableViewDelegate {
-    
-    func numberOfRows(in tableView: NSTableView) -> Int {
-        return lines.count
-    }
-    func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
-        //print(#function, row)
-        let time: CMTime
-        
-        switch tableColumn?.identifier.rawValue {
-        case "start": time = lines[row].start
-        case "end":   time = lines[row].end
-        case "text":  return lines[row].text
-        default:      return nil
-        }
-        
-        return String(describing: time)
-    }
-    
-    func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableView.DropOperation) -> NSDragOperation {
-        //print(#function, info, row, dropOperation)
-        return [.move]
-    }
-    
-    func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableView.DropOperation) -> Bool {
-        //print(#function, info, row, dropOperation)
-        let pboard = info.draggingPasteboard()
-        guard let data = pboard.data(forType: LineWrapper.pasteboardType) else { return false }
-        do {
-            let unarchived = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? LineWrapper
-            guard
-                let line = unarchived?.line,
-                let oldIndex = lines.index(of: line)
-                else { return false }
-            
-            tableView.beginUpdates()
-            
-            lines.insert(line, at: row)
-            if oldIndex < row {
-                lines.remove(at: oldIndex)
-            } else {
-                lines.remove(at: oldIndex.advanced(by: 1))
-            }
-            tableView.moveRow(at: oldIndex, to: row)
-            
-            tableView.endUpdates()
-        } catch {
-            print("deserialisation error:", error)
-            return false
-        }
-        return true
-    }
-    
-    func tableView(_ tableView: NSTableView, writeRowsWith rowIndexes: IndexSet, to pboard: NSPasteboard) -> Bool {
-        //print(#function, rowIndexes)
-        guard let row = rowIndexes.first, lines.startIndex..<lines.endIndex ~= row else { return false }
-        let linew = LineWrapper(lines[row])
-        guard let data = linew.pasteboardPropertyList(forType: LineWrapper.pasteboardType) as? Data else {
-            print("Couldn't serialise object")
-            return false
-        }
-        pboard.setData(data, forType: LineWrapper.pasteboardType)
-        return true
     }
 }

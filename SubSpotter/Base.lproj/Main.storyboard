@@ -91,7 +91,7 @@
                                         </menuItem>
                                         <menuItem title="Save…" keyEquivalent="s" id="pxx-59-PXV">
                                             <connections>
-                                                <action selector="saveDocument:" target="Ady-hI-5gd" id="teZ-XB-qJY"/>
+                                                <action selector="didSelectSave:" target="Ady-hI-5gd" id="t0F-r8-ZrI"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Save As…" keyEquivalent="S" id="Bw7-FT-i3A">
