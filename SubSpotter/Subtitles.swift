@@ -13,6 +13,7 @@ class Subtitles: NSObject {
     
     private var staged: Line?
     private var lines: [Line] = []
+    private var untimed: [String] = []
     
     /// Current playback time is updated regularly by the player
     public var currentTime: CMTime = CMTime(seconds: 0, preferredTimescale: 0)
@@ -20,7 +21,7 @@ class Subtitles: NSObject {
     func stage(text: String, at time: CMTime) {
         let secondsToShow: TimeInterval = 3 // Should be calculated according to text length + K
         let endTime = time + secondsToShow
-        staged = Line(start: time, end: endTime, text: nextLine)
+        staged = Line(start: time, end: endTime, text: text)
     }
     
     func commit() -> Array<Line>.Index {
@@ -46,7 +47,17 @@ class Subtitles: NSObject {
     }
     
     var nextLine: String {
-        return "Textrad nr \(lines.endIndex)"
+        guard !untimed.isEmpty else {
+            return "Textrad nr \(lines.endIndex)"
+        }
+        return untimed.removeFirst()
+    }
+    
+    func importText(from url: URL, using importer: Importer) throws {
+        untimed = try importer.getLines(from: url)
+        for (nr, line) in untimed.enumerated() {
+            print(nr, line)
+        }
     }
     
     func export(to destination: URL, using exporter: Exporter.Type) throws {

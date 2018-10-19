@@ -79,14 +79,22 @@ class ViewController: NSViewController {
         commit()
     }
 
-    @IBAction func didSelectOpen(_ sender: NSMenuItem) {
-        print(#function, sender)
+    @IBAction func didSelectOpenVideo(_ sender: NSMenuItem) {
         let dialogue = NSOpenPanel()
         dialogue.allowsMultipleSelection = false
         dialogue.canChooseDirectories = false
         dialogue.allowedFileTypes = ["mp4", "m4v", "mpg", "mpeg", "avi", "mov", "mkv"]
         guard dialogue.runModal() == .OK, let url = dialogue.url else { return }
         openNewFile(from: url)
+    }
+    
+    @IBAction func didSelectOpenText(_ sender: NSMenuItem) {
+        let dialogue = NSOpenPanel()
+        dialogue.allowsMultipleSelection = false
+        dialogue.canChooseDirectories = false
+        dialogue.allowedFileTypes = ["rtfd", "rtf", "txt", "doc", "docx"]
+        guard dialogue.runModal() == .OK, let url = dialogue.url else { return }
+        openText(from: url)
     }
     
     @IBAction func didSelectSave(_ sender: NSMenuItem) {
@@ -102,7 +110,15 @@ class ViewController: NSViewController {
         do {
             try subtitles.export(to: url, using: SrtExporter.self)
         } catch {
-            print("Save error:", error.localizedDescription)
+            presentError(error)
+        }
+    }
+    
+    func openText(from url: URL) {
+        do {
+            try subtitles.importText(from: url, using: TextImporter())
+        } catch {
+            presentError(error)
         }
     }
     
