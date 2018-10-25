@@ -28,7 +28,7 @@ class SrtExporter: Exporter {
             // Time format should be 00:01:20,000 --> 00:01:24,400
             let output = """
             \(row)
-            \(line.start.description) --> \(line.end.description)
+            \(line.start.formatted) --> \(line.end.formatted)
             \(line.text)\n\n
             """
             stream?.write([UInt8](output.utf8), maxLength: output.utf8.count)
