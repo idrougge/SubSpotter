@@ -57,7 +57,7 @@ extension CMTime: CustomStringConvertible {
 extension CMTime {
     /// String formatted as 01:10:20,450
     var formatted: String {
-        let t = self.seconds, h = Int(t / 3600), m = Int(t.truncatingRemainder(dividingBy: 3600) / 60), s = Int(t.truncatingRemainder(dividingBy: 60)), u = Int((t.truncatingRemainder(dividingBy: 1) * 1000).rounded())
-        return String(format: "%02i:%02i:%02i,%03i", h, m, s, u)
+        let t = self.seconds, h = Int(t / 3600), m = Int(t.truncatingRemainder(dividingBy: 3600) / 60), s = Int(t.truncatingRemainder(dividingBy: 60)), u = (t.truncatingRemainder(dividingBy: 1) * 1000)
+        return String(format: "%02i:%02i:%02i,%03.0f", h, m, s, u)
     }
 }
