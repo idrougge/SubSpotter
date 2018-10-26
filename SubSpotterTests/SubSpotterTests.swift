@@ -22,12 +22,12 @@ class SubSpotterTests: XCTestCase {
     func testTimeFormatter() {
         // Just a generic time
         var time = CMTime(value: 1178358419, timescale: 1000000000)
-        XCTAssert(time.formatted == "00:00:01,178")
+        XCTAssert(time.formatted == "00:00:01,178", "\(CMTimeCopyDescription(allocator: nil, time: time)!)")
         // This time should be rounded up from 4,17878 to 4,179
         time = CMTime(value: 4178780039, timescale: 1000000000)
         XCTAssert(time.formatted == "00:00:04,179", "This time should be rounded up from 4,17878 to 4,179")
         time = CMTime(value: 4795687999, timescale: 1000000000)
-        XCTAssert(time.formatted == "00:00:05,796")
+        XCTAssert(time.formatted == "00:00:04,796", "\(CMTimeCopyDescription(allocator: nil, time: time)!)")
         time = CMTime(value: 60014613663, timescale: 1000000000)
         XCTAssert(time.formatted == "00:01:00,015", "Past one minute: \(CMTimeCopyDescription(allocator: nil, time: time)!)")
         time = CMTime(value: 36057, timescale: 600)
