@@ -53,12 +53,13 @@ class ViewController: NSViewController {
     private func stage() {
         guard let player = playerView.player
             else { return }
-        commit()
+        commit() // Commit before staging a new line
         
         let startTime = player.currentTime()
         subtitles.stage(text: subtitles.nextLine, at: startTime)
     }
 
+    /// Commits any staged line
     private func commit() {
         guard let player = playerView.player
             else { return }

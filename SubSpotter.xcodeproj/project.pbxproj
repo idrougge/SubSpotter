@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DC5D6807218318F9008D4BE1 /* SubSpotterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5D6806218318F9008D4BE1 /* SubSpotterTests.swift */; };
+		DC5D680E21831904008D4BE1 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA45C3C21760FA800C102CC /* Extensions.swift */; };
 		DC607DE52174BA7E009C56A9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC607DE42174BA7E009C56A9 /* AppDelegate.swift */; };
 		DC607DE72174BA7E009C56A9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC607DE62174BA7E009C56A9 /* ViewController.swift */; };
 		DC607DE92174BA7F009C56A9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC607DE82174BA7F009C56A9 /* Assets.xcassets */; };
@@ -21,7 +23,20 @@
 		DCA45C4D2179F5A500C102CC /* Importer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA45C4C2179F5A500C102CC /* Importer.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		DC5D6809218318F9008D4BE1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DC607DD92174BA7E009C56A9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DC607DE02174BA7E009C56A9;
+			remoteInfo = SubSpotter;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		DC5D6804218318F9008D4BE1 /* SubSpotterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SubSpotterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DC5D6806218318F9008D4BE1 /* SubSpotterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubSpotterTests.swift; sourceTree = "<group>"; };
+		DC5D6808218318F9008D4BE1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DC607DE12174BA7E009C56A9 /* SubSpotter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SubSpotter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC607DE42174BA7E009C56A9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DC607DE62174BA7E009C56A9 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -40,6 +55,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		DC5D6801218318F9008D4BE1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DC607DDE2174BA7E009C56A9 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -50,10 +72,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DC5D6805218318F9008D4BE1 /* SubSpotterTests */ = {
+			isa = PBXGroup;
+			children = (
+				DC5D6806218318F9008D4BE1 /* SubSpotterTests.swift */,
+				DC5D6808218318F9008D4BE1 /* Info.plist */,
+			);
+			path = SubSpotterTests;
+			sourceTree = "<group>";
+		};
 		DC607DD82174BA7E009C56A9 = {
 			isa = PBXGroup;
 			children = (
 				DC607DE32174BA7E009C56A9 /* SubSpotter */,
+				DC5D6805218318F9008D4BE1 /* SubSpotterTests */,
 				DC607DE22174BA7E009C56A9 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -62,6 +94,7 @@
 			isa = PBXGroup;
 			children = (
 				DC607DE12174BA7E009C56A9 /* SubSpotter.app */,
+				DC5D6804218318F9008D4BE1 /* SubSpotterTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -90,6 +123,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		DC5D6803218318F9008D4BE1 /* SubSpotterTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DC5D680D218318F9008D4BE1 /* Build configuration list for PBXNativeTarget "SubSpotterTests" */;
+			buildPhases = (
+				DC5D6800218318F9008D4BE1 /* Sources */,
+				DC5D6801218318F9008D4BE1 /* Frameworks */,
+				DC5D6802218318F9008D4BE1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DC5D680A218318F9008D4BE1 /* PBXTargetDependency */,
+			);
+			name = SubSpotterTests;
+			productName = SubSpotterTests;
+			productReference = DC5D6804218318F9008D4BE1 /* SubSpotterTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		DC607DE02174BA7E009C56A9 /* SubSpotter */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DC607DF12174BA7F009C56A9 /* Build configuration list for PBXNativeTarget "SubSpotter" */;
@@ -113,10 +164,14 @@
 		DC607DD92174BA7E009C56A9 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0940;
+				LastSwiftUpdateCheck = 1000;
 				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = "Iggy Drougge";
 				TargetAttributes = {
+					DC5D6803218318F9008D4BE1 = {
+						CreatedOnToolsVersion = 10.0;
+						TestTargetID = DC607DE02174BA7E009C56A9;
+					};
 					DC607DE02174BA7E009C56A9 = {
 						CreatedOnToolsVersion = 9.4.1;
 					};
@@ -136,11 +191,19 @@
 			projectRoot = "";
 			targets = (
 				DC607DE02174BA7E009C56A9 /* SubSpotter */,
+				DC5D6803218318F9008D4BE1 /* SubSpotterTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		DC5D6802218318F9008D4BE1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DC607DDF2174BA7E009C56A9 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -153,6 +216,15 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		DC5D6800218318F9008D4BE1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DC5D6807218318F9008D4BE1 /* SubSpotterTests.swift in Sources */,
+				DC5D680E21831904008D4BE1 /* Extensions.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DC607DDD2174BA7E009C56A9 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -172,6 +244,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		DC5D680A218318F9008D4BE1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DC607DE02174BA7E009C56A9 /* SubSpotter */;
+			targetProxy = DC5D6809218318F9008D4BE1 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
 		DC607DEA2174BA7F009C56A9 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
@@ -184,6 +264,49 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		DC5D680B218318F9008D4BE1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 4AZ9573G2J;
+				INFOPLIST_FILE = SubSpotterTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.kristallpojken.SubSpotterTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SubSpotter.app/Contents/MacOS/SubSpotter";
+			};
+			name = Debug;
+		};
+		DC5D680C218318F9008D4BE1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 4AZ9573G2J;
+				INFOPLIST_FILE = SubSpotterTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.kristallpojken.SubSpotterTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SubSpotter.app/Contents/MacOS/SubSpotter";
+			};
+			name = Release;
+		};
 		DC607DEF2174BA7F009C56A9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -336,6 +459,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		DC5D680D218318F9008D4BE1 /* Build configuration list for PBXNativeTarget "SubSpotterTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DC5D680B218318F9008D4BE1 /* Debug */,
+				DC5D680C218318F9008D4BE1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		DC607DDC2174BA7E009C56A9 /* Build configuration list for PBXProject "SubSpotter" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
