@@ -21,3 +21,11 @@ extension Line: CustomStringConvertible {
         return String(format: "%@ — %@ : %@", start.description, end.description, text)
     }
 }
+
+extension Line {
+    init(start: TimeInterval, end: TimeInterval, text: String?) {
+        self.start = CMTime(seconds: start, preferredTimescale: 1000)
+        self.end = CMTime(seconds: end, preferredTimescale: 1000)
+        self.text = text ?? ""
+    }
+}

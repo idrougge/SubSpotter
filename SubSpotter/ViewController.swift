@@ -93,7 +93,7 @@ class ViewController: NSViewController {
         let dialogue = NSOpenPanel()
         dialogue.allowsMultipleSelection = false
         dialogue.canChooseDirectories = false
-        dialogue.allowedFileTypes = ["rtfd", "rtf", "txt", "doc", "docx"]
+        dialogue.allowedFileTypes = ["rtfd", "rtf", "txt", "doc", "docx", "srt"]
         guard dialogue.runModal() == .OK, let url = dialogue.url else { return }
         openText(from: url)
     }
@@ -117,7 +117,10 @@ class ViewController: NSViewController {
     
     func openText(from url: URL) {
         do {
-            try subtitles.importText(from: url, using: TextImporter())
+            switch url.pathExtension.lowercased() {
+            case "srt": try subtitles.importLines(from: url, using: SrtImporter())
+            default:    try subtitles.importText(from: url, using: TextImporter())
+            }
         } catch {
             presentError(error)
         }

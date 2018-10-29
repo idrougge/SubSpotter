@@ -53,7 +53,11 @@ class Subtitles: NSObject {
         return untimed.removeFirst()
     }
     
-    func importText(from url: URL, using importer: Importer) throws {
+    func importLines<I:Importer>(from url: URL, using importer: I ) throws where I.ImportedLine == Line {
+        self.lines = try importer.getLines(from: url)
+    }
+    
+    func importText(from url: URL, using importer: TextImporter) throws {
         untimed = try importer.getLines(from: url)
         for (nr, line) in untimed.enumerated() {
             print(nr, line)
