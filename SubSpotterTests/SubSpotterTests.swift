@@ -33,5 +33,20 @@ class SubSpotterTests: XCTestCase {
         time = CMTime(value: 36057, timescale: 600)
         XCTAssert(time.formatted == "00:01:00,095", "Verifying different timescale, past one minute: \(CMTimeCopyDescription(allocator: nil, time: time)!)")
     }
-
+    
+    func testSrtImporter() {
+        let importer = SrtImporter()
+        let line = "0\n00:00:21,424 --> 00:01:01,001\nRow 1\nRow 2\nRow 3"
+        do {
+            let imported = try importer.getLines(from: [line])
+            XCTAssertEqual(imported.count, 1)
+            guard let first = imported.first else { return XCTFail() }
+            XCTAssertEqual(first.start.seconds, 21.424)
+            XCTAssertEqual(first.end.seconds, 61.001)
+        } catch SrtImporter.ImportError.malformed(let message) {
+            XCTFail(message)
+        } catch {
+            XCTFail(error.localizedDescription)
+        }
+    }
 }

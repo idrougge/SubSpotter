@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		DC5D6807218318F9008D4BE1 /* SubSpotterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5D6806218318F9008D4BE1 /* SubSpotterTests.swift */; };
 		DC5D680E21831904008D4BE1 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA45C3C21760FA800C102CC /* Extensions.swift */; };
+		DC5D680F21876F67008D4BE1 /* Importer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA45C4C2179F5A500C102CC /* Importer.swift */; };
+		DC5D681021876FB4008D4BE1 /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA45C3E217736C700C102CC /* Line.swift */; };
 		DC607DE52174BA7E009C56A9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC607DE42174BA7E009C56A9 /* AppDelegate.swift */; };
 		DC607DE72174BA7E009C56A9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC607DE62174BA7E009C56A9 /* ViewController.swift */; };
 		DC607DE92174BA7F009C56A9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC607DE82174BA7F009C56A9 /* Assets.xcassets */; };
@@ -221,7 +223,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				DC5D6807218318F9008D4BE1 /* SubSpotterTests.swift in Sources */,
+				DC5D681021876FB4008D4BE1 /* Line.swift in Sources */,
 				DC5D680E21831904008D4BE1 /* Extensions.swift in Sources */,
+				DC5D680F21876F67008D4BE1 /* Importer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
