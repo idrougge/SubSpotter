@@ -26,9 +26,11 @@ struct TextImporter: Importer {
 
 struct SrtImporter: Importer {
     typealias ImportedLine = Line
+    
     enum ImportError: Error {
         case malformed(_ line: String)
     }
+    
     func getLines(from url: URL) throws -> [Line] {
         let text = try String(contentsOf: url, encoding: .utf8)
         // SRT files have a blank line for separating insertions
@@ -36,35 +38,26 @@ struct SrtImporter: Importer {
         print(rawLines)
         return try getLines(from: rawLines)
     }
+    
     func getLines(from lines: [String]) throws -> [Line] {
-        func seconds(h: Int, m: Int, s: Int, ms: Int) -> TimeInterval {
-            return Double(h * 3600) + Double(m * 60) + Double(s) + (Double(ms) / 1000)
-        }
-        let regex = try NSRegularExpression(pattern: "(\\d{2}):(\\d{2}):(\\d{2}),(\\d{3}) --> (\\d{2}):(\\d{2}):(\\d{2}),(\\d{3})", options: [])
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm:ss,SSS"
+        let referenceDate = formatter.date(from: "00:00:00,000")!
+        
         return try lines.compactMap{ insertion -> Line? in
             let lines = insertion.components(separatedBy: .newlines)
             guard lines.count > 2 else { return nil } // Each insertion must contain ordinal, time and at least one text row
             let timeRow = lines[1]
-            guard
-                let match = regex.firstMatch(in: timeRow,
-                                             options: [],
-                                             range: NSRange(timeRow.startIndex..., in: timeRow)),
-                match.numberOfRanges == 9
-                else { throw ImportError.malformed(insertion) }
-            let ranges: [Range<String.Index>] = try (1 ..< match.numberOfRanges).compactMap{ nr in
-                let nsrange = match.range(at: nr)
-                guard let range = Range(nsrange, in: timeRow) else { throw ImportError.malformed(insertion) }
-                return range
+            let times = timeRow
+                .components(separatedBy: " --> ")
+                .compactMap{ time in
+                    formatter
+                        .date(from: time)?
+                        .timeIntervalSince(referenceDate)
             }
-            let matches: [Int] = try ranges.map{ range in
-                let substring = String(timeRow[range])
-                guard let time = Int(substring) else { throw ImportError.malformed(insertion) }
-                return time
-            }
-            let start = seconds(h: matches[0], m: matches[1], s: matches[2], ms: matches[3])
-            let end = seconds(h: matches[4], m: matches[5], s: matches[6], ms: matches[7])
+            guard times.count == 2 else { throw ImportError.malformed(insertion)}
             let text = lines[2...].joined(separator: "\n")
-            let line = Line(start: start, end: end, text: text)
+            let line = Line(start: times[0], end: times[1], text: text)
             return line
         }
     }
