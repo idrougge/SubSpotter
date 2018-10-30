@@ -43,8 +43,6 @@ class SubSpotterTests: XCTestCase {
             guard let first = imported.first else { return XCTFail() }
             XCTAssertEqual(first.start.seconds, 21.424)
             XCTAssertEqual(first.end.seconds, 61.001)
-        } catch SrtImporter.ImportError.malformed(let message) {
-            XCTFail(message)
         } catch {
             XCTFail(error.localizedDescription)
         }

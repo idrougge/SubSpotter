@@ -27,10 +27,6 @@ struct TextImporter: Importer {
 struct SrtImporter: Importer {
     typealias ImportedLine = Line
     
-    enum ImportError: Error {
-        case malformed(_ line: String)
-    }
-    
     func getLines(from url: URL) throws -> [Line] {
         let text = try String(contentsOf: url, encoding: .utf8)
         // SRT files have a blank line for separating insertions
@@ -42,7 +38,7 @@ struct SrtImporter: Importer {
     func getLines(from lines: [String]) throws -> [Line] {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm:ss,SSS"
-        let referenceDate = formatter.date(from: "00:00:00,000")!
+        let referenceDate = formatter.date(from: "00:00:00,000")! // Default reference date is one year later than "zero" date
         
         return try lines.compactMap{ insertion -> Line? in
             let lines = insertion.components(separatedBy: .newlines)
@@ -55,7 +51,12 @@ struct SrtImporter: Importer {
                         .date(from: time)?
                         .timeIntervalSince(referenceDate)
             }
-            guard times.count == 2 else { throw ImportError.malformed(insertion)}
+            guard times.count == 2 else {
+                throw NSError(domain: Bundle.main.bundleIdentifier!,
+                                    code: 0,
+                                    userInfo: [NSLocalizedFailureErrorKey: "Malformed line in SRT:",
+                                               NSLocalizedFailureReasonErrorKey: insertion])
+            }
             let text = lines[2...].joined(separator: "\n")
             let line = Line(start: times[0], end: times[1], text: text)
             return line
