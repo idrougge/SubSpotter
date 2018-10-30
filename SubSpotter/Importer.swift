@@ -43,14 +43,7 @@ struct SrtImporter: Importer {
         let regex = try NSRegularExpression(pattern: "(\\d{2}):(\\d{2}):(\\d{2}),(\\d{3}) --> (\\d{2}):(\\d{2}):(\\d{2}),(\\d{3})", options: [])
         return try lines.compactMap{ insertion -> Line? in
             let lines = insertion.components(separatedBy: .newlines)
-            guard let ordinal = lines.first, lines.count > 2 else { return nil }
-            /*
-             let scanner = Scanner(string: ordinal)
-             scanner.charactersToBeSkipped = CharacterSet(charactersIn: ":,")
-             var h: Int = -1
-             scanner.scanInt(&h)
-             print("h =", h)
-             */
+            guard lines.count > 2 else { return nil } // Each insertion must contain ordinal, time and at least one text row
             let timeRow = lines[1]
             guard
                 let match = regex.firstMatch(in: timeRow,
